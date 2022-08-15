@@ -12,17 +12,30 @@ function App() {
     backend: ""
   });
 
-  const handleChange = evt => {
+  const handleInputChange = evt => {
     const { name, value } = evt.target;
     setFormData(prevData => ({
       ...prevData,
       [name]: value
     }));
+    console.log(formData);
+  };
+
+  const handleOptionChange = evt => {
+    const { name, value } = evt.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: Number(value)
+    }));
+    setTimeout(() => {
+      console.log(formData);
+    }, 1000);
   };
 
   const handleSubmit = async evt => {
     try {
       evt.preventDefault();
+      console.log(JSON.parse(JSON.stringify(formData)));
       const response = await fetch("http://localhost:3001/survey/", {
         method: "POST",
         headers: {
@@ -39,18 +52,78 @@ function App() {
 
 
   const renderFormFields = () => {
-    const fields = Object.keys(formData);
-    return fields.map(f => (
+    const fillInFields = Object.keys(formData).slice(0, 2);
+    const fillIn = fillInFields.map(f => (
       <div key={f}>
         <label htmlFor={f}>{f[0].toUpperCase() + f.slice(1).replace("N", " N")}: </label>
         <input
           id={f}
           name={f}
           value={formData[f]}
-          onChange={handleChange}
+          onChange={handleInputChange}
         />
       </div>
     ));
+
+    const optionFields = (
+      <div>
+        <div>
+          <label>
+            What is your level of experience?
+            <select name="experience" value={formData.experience} onChange={handleOptionChange}>
+              <option>Choose an option</option>
+              <option value="0">Less than one year</option>
+              <option value="1">Less than five years</option>
+              <option value="2">Less than 10 years</option>
+              <option value="3">Less than 15 years</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            What is your education level?
+            <select name="education" value={formData.education} onChange={handleOptionChange}>
+              <option>Choose an option</option>
+              <option value="0">Self Taught</option>
+              <option value="1">Bootcamp</option>
+              <option value="2">College</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            What is your level of experience working frontend?
+            <select name="frontend" value={formData.frontend} onChange={handleOptionChange}>
+              <option>Choose an option</option>
+              <option value="0">Poor</option>
+              <option value="1">Average</option>
+              <option value="2">Good</option>
+              <option value="3">Excellent</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label>
+            What is your level of experience working backend?
+            <select name="backend" value={formData.backend} onChange={handleOptionChange}>
+              <option>Choose an option</option>
+              <option value="0">Poor</option>
+              <option value="1">Average</option>
+              <option value="2">Good</option>
+              <option value="3">Excellent</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        {fillIn}
+        {optionFields}
+      </div>
+    );
+
   };
   return (
     <div>
