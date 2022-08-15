@@ -9,8 +9,7 @@ function App() {
     education: "",
     experience: "",
     frontend: "",
-    backend: "",
-    language: ""
+    backend: ""
   });
 
   const handleChange = evt => {
